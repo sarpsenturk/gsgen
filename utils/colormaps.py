@@ -15,7 +15,7 @@
 """ Helper functions for visualizing outputs """
 
 from dataclasses import dataclass
-from utils.typing import *
+from utils.types import *
 
 import matplotlib
 import torch

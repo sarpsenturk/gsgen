@@ -10,7 +10,7 @@ from diffusers import (
     PNDMScheduler,
 )
 
-from utils.typing import *
+from utils.types import *
 from utils.ops import perpendicular_component
 from utils.misc import C
 from rich.console import Console

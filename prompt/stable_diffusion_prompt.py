@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, CLIPTextModel
 from diffusers import DDIMScheduler, DDPMScheduler, StableDiffusionPipeline
 
-from utils.typing import *
+from utils.types import *
 from utils.ops import perpendicular_component
 from utils.misc import C
 from .prompt_processors import BasePromptProcessor, PromptEmbedding

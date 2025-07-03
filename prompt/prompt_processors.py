@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer, BertForMaskedLM
 
-from utils.typing import *
+from utils.types import *
 from utils.ops import shifted_expotional_decay
 from rich.console import Console
 

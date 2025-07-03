@@ -26,7 +26,7 @@ from diffusers.models.attention_processor import LoRAAttnProcessor
 from diffusers.models.embeddings import TimestepEmbedding
 
 from prompt.prompt_processors import PromptEmbedding
-from utils.typing import *
+from utils.types import *
 from utils.ops import perpendicular_component
 from utils.misc import C
 from rich.console import Console

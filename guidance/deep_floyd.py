@@ -14,7 +14,7 @@ from diffusers import (
 )
 from diffusers.utils.import_utils import is_xformers_available
 
-from utils.typing import *
+from utils.types import *
 from utils.ops import perpendicular_component
 from utils.misc import C
 from rich.console import Console
