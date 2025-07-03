@@ -8,7 +8,7 @@ import torch
 import matplotlib.pyplot as plt
 import logging
 from omegaconf import OmegaConf
-from utils.typing import *
+from utils.types import *
 import subprocess
 
 _timing_ = False

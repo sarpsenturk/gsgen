@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from utils.typing import *
+from utils.types import *
 import torch.nn.functional as F
 from kornia.geometry.depth import depth_to_3d
 
