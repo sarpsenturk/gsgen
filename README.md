@@ -1,101 +1,75 @@
 # GSGEN: Text-to-3D using Gaussian Splatting
 
-This repository contains the official implementation of [GSGEN: Text-to-3D using Gaussian Splattng](https://gsgen3d.github.io). 
+This repository is a fork of the original [GSGEN: Text-to-3D using Gaussian Splattng](https://gsgen3d.github.io) project.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1kg8OOnVXSnnEIk9IYBg55ZqkPfMh14xf?usp=sharing)
+### [Paper](https://arxiv.org/abs/2309.16585) | [Project Page](https://gsgen3d.github.io/) | [Original Repository](https://github.com/gsgen3d/gsgen)
 
+## Requirements
 
-### [Paper](https://arxiv.org/abs/2309.16585) | [Project Page](https://gsgen3d.github.io/)
+- Python 3.10
+- CUDA 12.8
+- GCC 11
 
-### Video results
+Google Colab is not supported out of the box due to CUDA and Python version mismatches.
 
+## Getting Started
 
-https://github.com/gsgen3d/gsgen/assets/44675551/6f3c0df7-e3d1-4a37-a617-8a35ade2d72d
+0. Create virtual environment:
 
+```
+python3.10 -m venv .venv
+source .venv/bin/activate
+```
 
-https://github.com/gsgen3d/gsgen/assets/44675551/64e5662f-e8d5-4380-a2ac-540d6789f65b
-
-
-
-https://github.com/gsgen3d/gsgen/assets/44675551/c9c25857-3b5c-4338-adb0-e8e0910c8260
-
-
-
-https://github.com/gsgen3d/gsgen/assets/44675551/25e3a94e-5a3b-4e14-bdd5-bfbf44fc2b82
-
-
-
-
-### Instructions:
 1. Install the requirements:
+
 ```
 pip install -r requirements.txt
 ```
+
 2. Build the extension for Gaussian Splatting:
+
 ```
 cd gs
 ./build.sh
 ```
+
 3. Start training!
-```python
-python main.py --config-name=base prompt.prompt="<prompt>"
+
 ```
-You can specify a different prompt for Point-E:
-```python
-python main.py --config-name=base prompt.prompt="<prompt>" init.prompt="<point-e prompt>"
+./train.sh "<prompt>"
 ```
 
-### Viewer
-#### splat viewer
-We support [splat](https://github.com/antimatter15/splat) viewer now !
-Click the captions of text-to-3D results in our project page to watch the assets in a WebGL based viwer.
-[Example: a pineapple](https://gsgen3d.github.io/viewer.html?url=A_zoomed_out_DSLR_photo_of_DSLR_photo_of_a_pineapple.splat).
-This great viewer achieves > 40 FPS on my MacBook with M1 pro chip.
+## Exporting
 
-#### viser based viewer (Visualize checkpoints on your own computer)
-Start the Viewer by:
-```python
-python vis.py <path-to-ckpt> --port <port>
-```
-If you are training on servers, [tunneling the port using SSH](https://www.ssh.com/academy/ssh/tunneling-example)
-```bash
-ssh -L <your_local_port>:<your_server_ip>:<your_server_port> <your_username>@<your_server>
-```
-then open the viewer in your host computer on port `<your_local_port>`.
+You can easily export the training results to a .ply file:
 
-### Exports
-First set the `PYTHONPATH` env var:
-```bash
-export PYTHONPATH="."
 ```
-#### To `.ply` file
-```bash
-python utils/export.py <your_ckpt> --type ply
-```
-#### To `.splat` file
-```bash
-python utils/export.py <your_ckpt> --type splat
-```
-#### To mesh (Currenly only support shape export)
-```bash
-python utils/export.py <your_ckpt> --type mesh --batch_size 65536 --reso 256 --K 200 --thresh 0.1
-```
-where the <your_ckpt> can be the path to the .pt checkpoint file or, more conveniently, can be the id for the run (the display name of the run in wandb, e.g. `0|213630|2023-10-11|a_high_quality_photo_of_a_corgi`). The exported files are reside in the `exports/<export-type>`.
-
-#### If you encounter troubles in exporting in colab, using `-m` will work:
-```bash
-python -m utils.export <your_ckpt> --type <export_type>
+./export.sh <ckpt_path>
 ```
 
-## Updates
-- [2023-10-08] Now support exports to `.ply` and `.splat` files. Mesh exporting are coming soon.
-- [2023-10-13] Now support Shap-E initialize, try it with `init.type="shap_e"`
-  
-### TODO
-- [ ] Support full mesh export. (Coming soon)  
-- [ ] Support [VSD loss](https://github.com/thu-ml/prolificdreamer). (The VSD code is already done, further tuning is on the way)
-- [ ] Support more guidance, e.g. [zero123](https://zero123.cs.columbia.edu/), [make-it-3d](https://github.com/junshutang/Make-It-3D), [ControlNet Openpose](https://github.com/mhussar/Controlnet3DCharacterRotation/tree/main), etc.
+Checkpoints are stored in the `checkpoints/` directory. 
 
+Export results are stored in the `exports/ply/` directory.
+
+## Flask API
+
+Run the Flask API with:
+
+```
+flask --app app run
+```
+
+This will run the development server on `localhost:5000`
+
+### Environment Variables
+
+The API requires a connection to Supabase, and therefore the following to be present in `.env`:
+
+```
+SUPABASE_URL=<supabase_project_url>
+SUPABASE_KEY=<supabase_anon_key>
+```
 
 ## Acknowledgement
 This code base is built upon the following awesome open-source projects:
