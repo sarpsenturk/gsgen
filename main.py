@@ -7,8 +7,7 @@ from rich.console import Console
 console = Console()
 
 
-@hydra.main(version_base="1.3", config_path="conf", config_name="trainer")
-def main(cfg):
+def main_logic(cfg):
     upsample_tune_only: bool = cfg.get("upsample_tune_only", False)
     # console.print(OmegaConf.to_yaml(cfg, resolve=True))
     ckpt = cfg.get("ckpt", None)
@@ -31,6 +30,11 @@ def main(cfg):
         trainer.tune_with_upsample_model()
 
         return 0
+
+
+@hydra.main(version_base="1.3", config_path="conf", config_name="trainer")
+def main(cfg):
+    return main_logic(cfg)
 
 
 if __name__ == "__main__":
