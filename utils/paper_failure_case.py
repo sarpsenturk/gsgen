@@ -83,7 +83,7 @@ if __name__ == "__main__":
         if not ckpt.exists():
             uid, time, day, prompt = str(ckpt).strip().split("|")
 
-            ckpt_dir = Path(f"./checkpoints/{prompt}/{day}/{time}/ckpts/")
+            ckpt_dir = Path(f"./checkpoints/{prompt}")
             if opt.step is None:
                 files = ckpt_dir.glob("*.pt")
                 latest_file = max(files, key=lambda x: x.stat().st_mtime)
@@ -100,7 +100,7 @@ if __name__ == "__main__":
                 if not ckpt.exists():
                     uid, time, day, prompt = str(ckpt).strip().split("|")
 
-                    ckpt_dir = Path(f"./checkpoints/{prompt}/{day}/{time}/ckpts/")
+                    ckpt_dir = Path(f"./checkpoints/{prompt}")
                     if opt.step is None:
                         files = ckpt_dir.glob("*.pt")
                         try:

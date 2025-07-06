@@ -6,7 +6,7 @@ def get_ckpt_path(ckpt):
     if not ckpt.exists():
         uid, time, day, prompt = str(ckpt).strip().split("|")
 
-        ckpt_dir = Path(f"./checkpoints/{prompt}/{day}/{time}/ckpts/")
+        ckpt_dir = Path(f"./checkpoints/{prompt}")
         files = ckpt_dir.glob("*.pt")
         try:
             latest_file = max(files, key=lambda x: x.stat().st_mtime)
