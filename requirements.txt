@@ -1,3 +1,5 @@
+--extra-index-url https://download.pytorch.org/whl/cu128
+
 absl-py==1.4.0
 accelerate==0.21.0
 antlr4-python3-runtime==4.9.3
@@ -101,10 +103,6 @@ tensorboard-data-server==0.7.1
 termcolor==2.3.0
 tifffile==2023.7.18
 tokenizers==0.13.3
-torch==2.0.1
-torchaudio==2.0.2
-torchtyping==0.1.4
-torchvision==0.15.2
 tqdm==4.66.1
 traitlets==5.9.0
 transformers==4.31.0
@@ -126,4 +124,9 @@ clip @ git+https://github.com/openai/CLIP.git@a1d071733d7111c9c014f024669f959182
 blobfile==2.1.0
 ipywidgets==8.1.1
 plyfile==1.0.1
-flask==2.3.3
+torch==2.7.1+cu128
+torchvision==0.22.1+cu128
+torchaudio==2.7.1+cu128
+flask==3.1.1
+supabase==2.16.0
+python-dotenv==1.1.1
