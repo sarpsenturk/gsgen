@@ -86,6 +86,41 @@ def unisphere_initialize(cfg):
     return initial_values
 
 
+def skybox_initialize(cfg):
+    """Initialize Gaussians for skybox generation on a large sphere facing inward"""
+    R = getattr(cfg, 'skybox_radius', 50.0)  # Large radius for skybox
+    N = cfg.num_points
+    
+    # Sample points on sphere surface
+    theta = torch.rand(N) * 2 * np.pi
+    phi = torch.rand(N) * np.pi
+    
+    x = R * torch.sin(phi) * torch.cos(theta)
+    y = R * torch.sin(phi) * torch.sin(theta)
+    z = R * torch.cos(phi)
+
+    initial_values = {}
+    initial_values["mean"] = torch.stack([x, y, z], dim=1)
+    
+    # Orient Gaussians to face inward toward origin
+    # Calculate quaternions that point from surface toward center
+    positions = initial_values["mean"]
+    # Direction from point to origin (inward facing)
+    directions = -positions / torch.norm(positions, dim=1, keepdim=True)
+    
+    # Create quaternions from directions (assume looking down -Z initially)
+    # For simplicity, use identity quaternions - orientation will be learned
+    initial_values["qvec"] = get_qvec(cfg)
+    
+    # Use larger scales for skybox distances
+    svec_val = getattr(cfg, 'skybox_scale', cfg.svec_val * 10.0)
+    initial_values["svec"] = torch.ones(N, 3, dtype=torch.float32) * svec_val
+    initial_values["alpha"] = get_alpha(cfg)
+    initial_values["color"] = torch.rand(N, 3, dtype=torch.float32)
+
+    return initial_values
+
+
 def semisphere_initialize(cfg):
     R = cfg.mean_std
     N = cfg.num_points
@@ -488,6 +523,8 @@ def initialize(cfg, **kwargs):
         return base_initialize(cfg)
     elif init_type == "unisphere":
         return unisphere_initialize(cfg)
+    elif init_type == "skybox":
+        return skybox_initialize(cfg)
     elif init_type == "point_e":
         return point_e_intialize(cfg)
     elif init_type == "shap_e":

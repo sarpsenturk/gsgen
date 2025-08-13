@@ -150,43 +150,68 @@ class CameraPoseProvider(Dataset):
 
     def sample_one(self):
         reso = self.get_reso
-        camera_distance = np.random.uniform(*self.camera_distance)
-
-        if self.cfg.elevation_real_uniform:
-            elevation = self.get_elevation_bound
-            elevation_range_percent = [
-                (elevation[0] + 90.0) / 180.0,
-                (elevation[1] + 90.0) / 180.0,
-            ]
-            elevation_rad = np.arcsin(
-                2
-                * (
-                    np.random.rand()
-                    * (elevation_range_percent[1] - elevation_range_percent[0])
-                    + elevation_range_percent[0]
-                )
-                - 1.0
-            )
-            elevation = np.rad2deg(elevation_rad)
-        else:
-            elevation = np.random.uniform(*self.get_elevation_bound)
+        
+        # Check if this is skybox mode
+        skybox_mode = getattr(self.cfg, 'skybox_mode', False)
+        
+        if skybox_mode:
+            # For skybox: camera at origin, sample orientations
+            camera_distance = 0.0  # Camera stays at origin
+            
+            # Sample full sphere orientation
+            elevation = np.random.uniform(-90, 90)
+            azimuth = np.random.uniform(0, 360)
             elevation_rad = np.deg2rad(elevation)
+            azimuth_rad = np.deg2rad(azimuth)
+            
+            # Camera position stays at origin
+            pos = np.array([0.0, 0.0, 0.0])
+            
+            # Look direction from orientation
+            look_x = np.cos(elevation_rad) * np.cos(azimuth_rad)
+            look_y = np.cos(elevation_rad) * np.sin(azimuth_rad)
+            look_z = np.sin(elevation_rad)
+            look_at = pos + np.array([look_x, look_y, look_z])
+            
+        else:
+            # Original object-centric camera sampling
+            camera_distance = np.random.uniform(*self.camera_distance)
 
-        azimuth = np.random.uniform(*self.get_azimuth_bound)
-        azimuth_rad = np.deg2rad(azimuth)
+            if self.cfg.elevation_real_uniform:
+                elevation = self.get_elevation_bound
+                elevation_range_percent = [
+                    (elevation[0] + 90.0) / 180.0,
+                    (elevation[1] + 90.0) / 180.0,
+                ]
+                elevation_rad = np.arcsin(
+                    2
+                    * (
+                        np.random.rand()
+                        * (elevation_range_percent[1] - elevation_range_percent[0])
+                        + elevation_range_percent[0]
+                    )
+                    - 1.0
+                )
+                elevation = np.rad2deg(elevation_rad)
+            else:
+                elevation = np.random.uniform(*self.get_elevation_bound)
+                elevation_rad = np.deg2rad(elevation)
 
-        x = camera_distance * np.cos(elevation_rad) * np.cos(azimuth_rad)
-        y = camera_distance * np.cos(elevation_rad) * np.sin(azimuth_rad)
-        z = camera_distance * np.sin(elevation_rad)
+            azimuth = np.random.uniform(*self.get_azimuth_bound)
+            azimuth_rad = np.deg2rad(azimuth)
 
-        center = self.center + np.random.randn(3) * self.center_aug_std
+            x = camera_distance * np.cos(elevation_rad) * np.cos(azimuth_rad)
+            y = camera_distance * np.cos(elevation_rad) * np.sin(azimuth_rad)
+            z = camera_distance * np.sin(elevation_rad)
 
-        pos = np.array([x, y, z])
+            center = self.center + np.random.randn(3) * self.center_aug_std
+            pos = np.array([x, y, z])
+            look_at = center
 
         c2w = torch.from_numpy(
             get_c2w_from_up_and_look_at(
                 self.up,
-                center,
+                look_at,
                 pos,
             )
         ).to(torch.float32)

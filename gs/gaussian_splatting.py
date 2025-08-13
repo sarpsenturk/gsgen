@@ -246,6 +246,12 @@ class GaussianSplattingRenderer(torch.nn.Module):
         self.setup_bg(cfg.background)
 
         self.skip_frustum_culling = cfg.get("skip_frustum_culling", False)
+        
+        # Auto-enable skybox optimizations if skybox mode is detected
+        skybox_mode = cfg.get("skybox_mode", False)
+        if skybox_mode:
+            console.print("[green]Skybox mode enabled - disabling frustum culling[/green]")
+            self.skip_frustum_culling = True
 
         self.fields = ["mean", "qvec", "svec", "color", "alpha"]
         self.raw_fields = [

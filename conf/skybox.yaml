@@ -1,0 +1,110 @@
+# Skybox generation configuration
+# Inherits from base config with skybox-specific modifications
+
+defaults:
+  - base
+  - _self_
+
+# Skybox mode settings
+skybox_mode: true
+
+# Initialization for skybox
+init:
+  type: skybox
+  prompt: a beautiful sunset sky
+  num_points: 8192  # More points for full sphere coverage
+  skybox_radius: 50.0  # Large radius for skybox
+  skybox_scale: 1.0   # Larger scales for skybox distances
+  mean_std: 50.0      # Use skybox_radius instead but kept for compatibility
+  svec_val: 1.0       # Larger initial scales
+  alpha_val: 0.5      # Lower initial opacity
+  random_color: true
+
+# Camera settings for skybox
+data:
+  skybox_mode: true
+  center: [0, 0, 0]
+  center_aug_std: 0.0  # No camera center augmentation for skybox
+  azimuth: [0, 360]    # Full rotation
+  elevation: [-90, 90] # Full sphere
+  azimuth_warmup: [0, 360]
+  elevation_warmup: [-90, 90]
+  camera_distance: [0.0, 0.0]  # Camera stays at origin
+  reso: [64, 128, 256] # Progressive resolution
+  reso_milestones: [500, 1000]
+  focal_milestones: null
+  focal: [0.7, 1.0]
+  near_plane: 0.1
+  far_plane: 1000.0  # Much larger far plane for skybox
+  elevation_real_uniform: false
+  up: [0, 0, 1]
+  light_distance_range: [10, 50]
+  light_aug_std: 0.1
+  light_sample: dreamfusion
+
+# Gaussian settings optimized for skybox
+renderer:
+  skybox_mode: true
+  skip_frustum_culling: true  # Disable culling for skybox
+  frustum_culling_radius: 0.0
+  far_plane: 1000.0  # Much larger far plane for skybox
+  densify:
+    enabled: false  # Disable densification for initial testing
+    warm_up: 2000
+    end: 9999
+    period: 1000
+    mean2d_thresh: 0.02
+    split_thresh: 0.02
+    n_splits: 2
+    split_shrink: 0.8
+    use_legacy: true
+  prune:
+    enabled: false  # Disable pruning for initial testing
+    warm_up: 0
+    end: 0
+    radii2d_thresh: 1000
+    alpha_thresh: 1000
+    radii3d_thresh: 0.0
+    period: 500
+  background:
+    type: random  # Random background for skybox
+    random_aug: true
+    random_aug_prob: 1.0
+
+# Reduced training steps for faster testing
+max_steps: 3000
+
+# Evaluation settings for skybox
+eval:
+  image_period: 50
+  video_period: 200
+  elevation: 0  # Look straight ahead
+  n_frames: 60  # More frames for 360 view
+  n_circles: 2
+  save_format: mp4
+  downsample: 1
+
+# Prompt settings for skybox
+prompt:
+  type: stable_diffusion
+  prompt: "a beautiful cosmic nebula with stars and galaxies, space background, cinematic lighting"
+  negative_prompt: "blurry, low quality, distorted"
+
+# Guidance settings
+guidance:
+  type: make_it_3d
+  guidance_type: "make_it_3d"
+  lambda_sds: 0.1
+  lambda_clip: 0.01
+  weighting_strategy: sds
+  min_step_percent: 0.02
+  max_step_percent: 0.98
+
+# Loss settings
+loss:
+  sds: 0.1
+  aux_guidance: [1000, 0.01, 0, 1001]
+  sparsity: 0.0
+  opague: 0.0
+  z_var: 0.0
+  depth_prior: 0.0
