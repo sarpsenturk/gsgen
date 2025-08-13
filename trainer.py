@@ -301,6 +301,8 @@ class Trainer(nn.Module):
             camera_distance=batch["camera_distance"],
             c2w=batch["c2w"],
             rgb_as_latents=False,
+            image=out["rgb"],  # Pass image in kwargs for CLIP loss
+            text=prompt_embeddings,  # Pass text in kwargs for CLIP loss
         )
         loss = 0.0
         if "loss_sds" in guidance_out.keys():

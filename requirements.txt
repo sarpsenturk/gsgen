@@ -107,15 +107,14 @@ tqdm==4.66.1
 traitlets==5.9.0
 transformers==4.31.0
 trimesh==3.23.1
-triton==2.0.0
-typeguard==4.1.0
+typeguard==2.13.0
 tyro==0.5.5
 virtualenv==20.24.2
 viser==0.0.16
 wandb==0.15.8
 wcwidth==0.2.6
 websockets==11.0.3
-Werkzeug==2.3.6
+Werkzeug==3.1.0
 zipp==3.16.2
 vedo
 timm==0.9.5
@@ -127,6 +126,7 @@ plyfile==1.0.1
 torch==2.7.1+cu128
 torchvision==0.22.1+cu128
 torchaudio==2.7.1+cu128
+torchtyping==0.1.5
 flask==3.1.1
 supabase==2.16.0
 python-dotenv==1.1.1

@@ -23,12 +23,13 @@ init:
 # Camera settings for skybox
 data:
   skybox_mode: true
+  max_steps: ${max_steps}  # Reference the global max_steps
   center: [0, 0, 0]
   center_aug_std: 0.0  # No camera center augmentation for skybox
   azimuth: [0, 360]    # Full rotation
   elevation: [-90, 90] # Full sphere
-  azimuth_warmup: [0, 360]
-  elevation_warmup: [-90, 90]
+  azimuth_warmup: 0    # No warmup - start with full range immediately
+  elevation_warmup: 0  # No warmup - start with full range immediately
   camera_distance: [0.0, 0.0]  # Camera stays at origin
   reso: [64, 128, 256] # Progressive resolution
   reso_milestones: [500, 1000]

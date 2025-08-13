@@ -39,9 +39,9 @@ class CameraPoseProvider(Dataset):
         self.center_aug_std = self.cfg.center_aug_std
 
         self.azimuth = to_primitive(self.cfg.azimuth)
-        self.elevation = self.cfg.elevation
-        self.azimuth_warmup = self.cfg.azimuth_warmup
-        self.elevation_warmup = self.cfg.elevation_warmup
+        self.elevation = to_primitive(self.cfg.elevation)
+        self.azimuth_warmup = to_primitive(self.cfg.azimuth_warmup)
+        self.elevation_warmup = to_primitive(self.cfg.elevation_warmup)
         self.camera_distance = self.cfg.camera_distance
         self.reso = self.cfg.reso
         self.reso_milestones = to_primitive(self.cfg.reso_milestones)
